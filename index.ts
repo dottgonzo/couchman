@@ -2,7 +2,9 @@ import * as Promise from "bluebird";
 
 // import * as _ from "lodash";
 
-import couchObj = require("../couchobject"); //to be changed!!!!!!!!!!
+import couchObj = require("couchobject");
+import couchMod = require("couch-node");
+import merge = require("json-add");
 
 let rpj = require("request-promise-json");
 
@@ -85,54 +87,27 @@ interface Idependents {
     relation?: Irelations
 }
 
-class CouchManager {
+class CouchManager extends couchMod {
+
     couchdb: string;
     class: string;
     serial: string;
     apiVersion: string;
 
-    constructor(conf: { couch: string, class?: string, serial?: string, apiVersion?: string }) {
+    constructor(conf: { url: string, couch: string, class?: string, serial?: string, apiVersion?: string }) {
+
         this.couchdb = conf.couch;
         if (conf.class) this.class = conf.class;
         if (conf.serial) this.class = conf.serial;
         if (conf.apiVersion) this.apiVersion = conf.apiVersion;
-    }
-    
-    //  mapto(relations){
-        
-    //  }
-
-    create(obj) {
-
-        let that = this;
-
-        if (!obj.apiVersion && that.apiVersion) obj.apiVersion = that.apiVersion;
-
-
-        return create(obj, this.couchdb);
-
-
-    }
-
-    update(obj) {
-        let that = this;
-        if (!obj.apiVersion && that.apiVersion) obj.apiVersion = that.apiVersion
-
-        return update(obj, this.couchdb);
-
-
+        super(conf.url)
     }
 
 
 
-    find(_id) {
-
-        return find(_id, this.couchdb);
 
 
-    }
-
-    gen(options?: { class?: string, serial?: string, apiVersion?: string }) {
+    gen(options?: any) { //to be tiped
         let opt = <couchObj>{};
         let that = this;
 
@@ -150,10 +125,32 @@ class CouchManager {
 
     }
 
-    take(data?: { number?: number, offset?: number, order?: string, startId?: string, stopId?: string, startTime?: number, stopTime?: number }, relation?: Irelations) {
-      if(!data){
-          data={};
-      }
+
+
+    new(newobj) {
+
+        let obj = this.gen();
+        merge(obj, newobj);
+        return obj
+    }
+    find_by_label(newobj) {
+
+
+    }
+
+    find_by_tags(newobj) {
+
+
+    }
+    where(wh: { any }) {
+
+
+    }
+
+    all(data?: { number?: number, offset?: number, order?: string, startId?: string, stopId?: string, startTime?: number, stopTime?: number }, relation?: Irelations) {
+        if (!data) {
+            data = {};
+        }
         let that = this;
         let startId;
         let stopId;
@@ -215,7 +212,7 @@ class CouchManager {
         } else {
             q = that.couchdb + '/_all_docs?startkey="' + startId + '"';
         }
-console.log(q)
+        console.log(q)
         return new Promise(function(resolve, reject) {
             rpj.get(q).then(function(objects) {
                 console.log(objects)

@@ -5,8 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "bluebird": "^3.3.5",
-    "request-promise-json": "^1.0.4",
-        "couchobject": "^1.0.0"
+    "couch-node": "0.0.3",
+    "couchobject": "^1.0.0",
+    "json-add": "0.0.10",
+    "request-promise-json": "^1.0.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
