@@ -2,74 +2,12 @@ import * as Promise from "bluebird";
 
 // import * as _ from "lodash";
 
-import couchObj = require("couchobject");
-import couchMod = require("couch-node");
+import couchObj from 'couchobject';
+import couchNode from 'couch-node';
 import merge = require("json-add");
 
-let rpj = require("request-promise-json");
+import * as superagent from "superagent";
 
-
-
-
-
-function find(_id: string, couchdb: string) {
-
-    return new Promise(function(resolve, reject) {
-
-        rpj.get(couchdb + "/" + _id).then(function(obj) {
-            resolve(obj);
-        }).catch(function(err) {
-            reject(err);
-        })
-
-    })
-
-}
-
-
-
-
-
-function update(obj, couchdb: string) {
-
-
-
-    return new Promise<boolean>(function(resolve, reject) {
-
-
-        find(obj._id, couchdb).then(function(o: any) {
-
-            obj._rev = o._rev;
-
-            create(obj, couchdb).then(function() {
-                resolve(true);
-            }).catch(function(err) {
-                reject(err);
-            })
-        })
-
-    })
-
-}
-
-
-
-function create(obj, couchdb: string) {
-
-
-    return new Promise<string>(function(resolve, reject) {
-
-
-        rpj.put(couchdb + "/" + obj._id, obj).then(function() {
-            resolve(obj._id);
-        }).catch(function(err) {
-            reject(err);
-        })
-
-    })
-
-
-}
 
 interface Idepends {
     class: string,
@@ -87,7 +25,7 @@ interface Idependents {
     relation?: Irelations
 }
 
-class CouchManager extends couchMod {
+class CouchManager extends couchNode {
 
     couchdb: string;
     class: string;
@@ -96,11 +34,15 @@ class CouchManager extends couchMod {
 
     constructor(conf: { url: string, couch: string, class?: string, serial?: string, apiVersion?: string }) {
 
+        if (!conf) throw Error("No conf of couchman")
+
+        super(conf.url);
+
+
         this.couchdb = conf.couch;
         if (conf.class) this.class = conf.class;
         if (conf.serial) this.class = conf.serial;
         if (conf.apiVersion) this.apiVersion = conf.apiVersion;
-        super(conf.url)
     }
 
 
@@ -213,15 +155,15 @@ class CouchManager extends couchMod {
             q = that.couchdb + '/_all_docs?startkey="' + startId + '"';
         }
         console.log(q)
-        return new Promise(function(resolve, reject) {
-            rpj.get(q).then(function(objects) {
+        return new Promise(function (resolve, reject) {
+            rpj.get(q).then(function (objects) {
                 console.log(objects)
                 resolve(objects.rows);
 
                 if (relation) {
                     resolve(that.relation(objects, relation))
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 reject(err);
             })
 
