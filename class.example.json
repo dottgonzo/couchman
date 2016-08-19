@@ -1,0 +1,76 @@
+[
+       {
+        "Streaming": {
+            "plural": "Streamings",
+            "relations": {
+                "Locations": {
+                    "relations": [
+                        {
+                            "Streamings": {
+                                "relations": [
+                                    "streaming_id"
+                                ]
+                            },
+                            "Events": {}
+                        }
+                    ]
+                },
+                "Streaming": {}
+            },
+            "schema":{}
+        }
+    },
+    {
+        "Location": {
+            "plural": "Locations",
+            "relations": {
+                "Locations": {
+                    "relations": [
+                        {
+                            "Streamings": {
+                                "relations": [
+                                    "streaming_id"
+                                ]
+                            },
+                            "Events": {}
+                        }
+                    ]
+                },
+                "Streaming": {}
+            },
+            "requireds": [
+                "label",
+                "permalink"
+            ]
+        }
+    },
+    {
+        "Event": {
+            "plural": "Events",
+            "relations": {
+                "locations": {
+                    "class": "Locations",
+                    "relations": [
+                        {
+                            "Streamings": {
+                                "relations": []
+                            },
+                            "Events": {}
+                        }
+                    ]
+                },
+                "streaming_id": {
+                    "class": "Streaming"
+                }
+            },
+            "requireds": [
+                "name",
+                "label",
+                "permalink",
+                "location",
+                "streaming"
+            ],
+            "version": "1.3.1"
+        }
+    }
+]

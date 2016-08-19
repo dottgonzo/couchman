@@ -1,0 +1,16 @@
+[
+    {
+        "class": "Location", // couchObj
+        "_id": "Location_kjdkjbkbds_64988798",
+        "name": "L'Aperidisko", // attributes
+        "Events": [
+            {
+                "_id": "Location_kjdkjbkbds_64988798"
+            }
+        ]
+    },
+    {
+        "class": "Event", // couchObj
+        "permalink": "" // web_framework
+    }
+]
