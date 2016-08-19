@@ -25,14 +25,20 @@ interface Idependents {
     relation?: Irelations
 }
 
-class CouchManager extends couchNode {
+interface IAuth {
+    user: string;
+    password: string;
+}
 
+
+class CouchManager extends couchNode {
+    auth: IAuth;
     couchdb: string;
     class: string;
     serial: string;
     apiVersion: string;
 
-    constructor(conf: { url: string, couch: string, class?: string, serial?: string, apiVersion?: string }) {
+    constructor(conf: { url: string, couch: string, class?: string, serial?: string, apiVersion?: string, auth?: IAuth }) {
 
         if (!conf) throw Error("No conf of couchman")
 
